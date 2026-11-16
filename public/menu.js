@@ -6,6 +6,12 @@ const currency = new Intl.NumberFormat('es-US', {
   currency: 'USD'
 });
 
+const demoPhotos = {
+  1: '/images/pastelito-pollo.jpg',
+  2: '/images/pastelito-queso.jpg',
+  3: '/images/flan-casero.jpg'
+};
+
 function renderMenu(products, category) {
   menu.replaceChildren();
   const visibleProducts = products.filter(
@@ -36,6 +42,15 @@ function renderMenu(products, category) {
     summary.textContent = 'Ver detalles';
     description.textContent = product.description;
     details.append(summary, description);
+    const photoUrl = demoPhotos[product.id];
+    if (photoUrl) {
+      const photo = document.createElement('img');
+      photo.className = 'dish-photo';
+      photo.alt = '';
+      photo.addEventListener('error', () => photo.remove(), { once: true });
+      photo.src = photoUrl;
+      card.append(photo);
+    }
     card.append(name, price, availability, details);
     menu.append(card);
   }
@@ -100,3 +115,4 @@ async function loadMenu(date) {
 
 pickupDate.addEventListener('change', () => loadMenu(pickupDate.value));
 loadMenu();
+
