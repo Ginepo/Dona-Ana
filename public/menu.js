@@ -43,6 +43,21 @@ function renderMenu(products, category) {
     summary.textContent = 'Ver detalles';
     description.textContent = product.description;
     details.append(summary, description);
+    if (product.available_units > 0) {
+      const label = document.createElement('label');
+      const quantity = document.createElement('input');
+      const add = document.createElement('button');
+      label.textContent = 'Cantidad';
+      quantity.type = 'number';
+      quantity.min = '1';
+      quantity.max = String(product.available_units);
+      quantity.value = '1';
+      label.append(quantity);
+      add.type = 'button';
+      add.textContent = 'Agregar al carrito';
+      add.addEventListener('click', () => cart.add(product, quantity.valueAsNumber));
+      details.append(label, add);
+    }
     const photoUrl = demoPhotos[product.id];
     if (photoUrl) {
       const photo = document.createElement('img');
@@ -74,6 +89,7 @@ const dateLabel = new Intl.DateTimeFormat('es-US', {
 
 async function loadMenu(date) {
   pickupDate.disabled = true;
+  cart.setMenu(null, []);
   filters.replaceChildren();
   menu.replaceChildren();
   status.textContent = 'Cargando el menú…';
@@ -96,6 +112,7 @@ async function loadMenu(date) {
       return;
     }
 
+    cart.setMenu(data.pickupDate, data.products);
     const categories = [...new Set(data.products.map((product) => product.category))];
 
     for (const category of [null, ...categories]) {
@@ -123,5 +140,6 @@ async function loadMenu(date) {
 
 pickupDate.addEventListener('change', () => loadMenu(pickupDate.value));
 loadMenu();
+
 
 

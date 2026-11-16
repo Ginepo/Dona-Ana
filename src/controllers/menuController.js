@@ -36,5 +36,6 @@ function getMenu(req, res) {
   });
 }
 
-module.exports = { getMenu };
+module.exports = { getMenu, getPickupDates };
+
 

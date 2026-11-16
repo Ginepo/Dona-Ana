@@ -7,7 +7,10 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.get('/api/menu', getMenu);
+const { postCartQuote } = require('./controllers/cartController');
+app.post('/api/cart/quote', express.json(), postCartQuote);
 
 app.listen(port, () => {
   console.log(`Dona Ana is running at http://localhost:${port}`);
 });
+
