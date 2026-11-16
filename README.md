@@ -46,3 +46,15 @@ and owner sign-in and menu management.
 The app uses demo pickup hours and records orders as pending and unpaid.
 Payments, customer search, and a private order-status page are planned for
 a later sprint. Use fictional customer information in the public demo.
+
+## Live demo
+
+[Open Doña Ana](https://dona-ana.onrender.com/)
+
+### Customer menu and cart
+
+![Customer menu and cart](docs/screenshots/menu-cart.png)
+
+### Owner panel and pending orders
+
+![Owner panel and pending orders](docs/screenshots/owner-orders.png)
