@@ -58,7 +58,9 @@ function renderMenu(products, category) {
       add.addEventListener('click', () => cart.add(product, quantity.valueAsNumber));
       details.append(label, add);
     }
-    const photoUrl = demoPhotos[product.id];
+    const photoUrl = product.has_photo
+      ? `/api/dishes/${product.id}/photo`
+      : demoPhotos[product.id];
     if (photoUrl) {
       const photo = document.createElement('img');
       photo.className = 'dish-photo';
@@ -140,6 +142,7 @@ async function loadMenu(date) {
 
 pickupDate.addEventListener('change', () => loadMenu(pickupDate.value));
 loadMenu();
+
 
 
 
