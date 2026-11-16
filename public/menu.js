@@ -14,6 +14,7 @@ const demoPhotos = {
 
 function renderMenu(products, category) {
   menu.replaceChildren();
+  const featuredProductId = products.find((product) => product.available_units > 0)?.id;
   const visibleProducts = products.filter(
     (product) => category === null || product.category === category
   );
@@ -50,6 +51,13 @@ function renderMenu(products, category) {
       photo.addEventListener('error', () => photo.remove(), { once: true });
       photo.src = photoUrl;
       card.append(photo);
+    }
+    if (product.id === featuredProductId) {
+      const featured = document.createElement('p');
+      featured.textContent = 'Destacado';
+      featured.style.color = '#713526';
+      featured.style.fontWeight = '700';
+      card.append(featured);
     }
     card.append(name, price, availability, details);
     menu.append(card);
@@ -115,4 +123,5 @@ async function loadMenu(date) {
 
 pickupDate.addEventListener('change', () => loadMenu(pickupDate.value));
 loadMenu();
+
 
