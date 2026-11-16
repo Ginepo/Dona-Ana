@@ -6,6 +6,29 @@
   const acceptPrices = document.querySelector('#accept-prices');
   const dollars = new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' });
 
+  const orderForm = document.querySelector('#order-form');
+  const orderStatus = document.querySelector('#order-status');
+  const timeSelect = orderForm.elements.pickupTime;
+  const submitOrder = orderForm.querySelector('button[type="submit"]');
+  const pickupSelector = document.querySelector('#pickup-date');
+  const menuSection = document.querySelector('#menu');
+  let submitting = false;
+  let lastAttempt;
+
+  fetch('/api/pickup-times')
+    .then((response) => {
+      if (!response.ok) throw new Error('Pickup times unavailable');
+      return response.json();
+    })
+    .then((times) => {
+      timeSelect.add(new Option('Elige una hora', ''));
+      for (const time of times) timeSelect.add(new Option(time, time));
+      submitOrder.disabled = times.length === 0;
+    })
+    .catch(() => {
+      orderStatus.textContent = 'No se pudieron cargar las horas de recogida. Recarga la página.';
+    });
+
   let date;
   let products = new Map();
   let requestVersion = 0;
@@ -86,6 +109,7 @@
 
   async function refreshQuote() {
     const version = ++requestVersion;
+    orderForm.hidden = true;
     const items = [...(currentItems()?.values() ?? [])];
     acceptPrices.hidden = true;
     updatedLines = [];
@@ -114,6 +138,7 @@
         : '';
       updatedLines = quote.lines;
       acceptPrices.hidden = !quote.priceChanged;
+      orderForm.hidden = quote.priceChanged;
     } catch (error) {
       if (version === requestVersion) {
         cartStatus.textContent = error instanceof SyntaxError
@@ -130,5 +155,65 @@
     refreshQuote();
   });
 
+  orderForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (submitting || orderForm.hidden || !currentItems()?.size) return;
+
+    const items = currentItems();
+    const payload = {
+      pickupDate: date,
+      pickupTime: timeSelect.value,
+      name: orderForm.elements.customerName.value.trim(),
+      phone: orderForm.elements.phone.value.trim(),
+      items: [...items.values()].map(({ productId, quantity, priceCents }) => ({
+        productId, quantity, priceCents
+      }))
+    };
+    const signature = JSON.stringify(payload);
+    if (lastAttempt?.signature !== signature) {
+      lastAttempt = { signature, requestId: crypto.randomUUID() };
+    }
+
+    submitting = true;
+    orderForm.querySelector('fieldset').disabled = true;
+    pickupSelector.disabled = true;
+    menuSection.inert = true;
+    list.inert = true;
+    orderStatus.textContent = 'Enviando pedido…';
+
+    let refreshMenu = false;
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, requestId: lastAttempt.requestId })
+      });
+      const order = await response.json();
+
+      if (!response.ok) {
+        orderStatus.textContent = order.error || 'No se pudo enviar el pedido.';
+        if (response.status === 409) refreshQuote();
+        return;
+      }
+
+      items.clear();
+      lastAttempt = undefined;
+      orderForm.reset();
+      orderStatus.textContent = `Pedido ${order.orderNumber} recibido. Estado: pendiente.`;
+      refreshMenu = true;
+      render();
+    } catch {
+      orderStatus.textContent = 'No pudimos confirmar el pedido. Vuelve a enviarlo con los mismos datos.';
+    } finally {
+      submitting = false;
+      orderForm.querySelector('fieldset').disabled = false;
+      pickupSelector.disabled = false;
+      menuSection.inert = false;
+      list.inert = false;
+      if (refreshMenu) pickupSelector.dispatchEvent(new Event('change'));
+    }
+  });
+
   return { add, setMenu };
 })();
+

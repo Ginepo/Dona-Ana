@@ -60,4 +60,5 @@ function listMenu(pickupDate) {
   return listProducts.all(pickupDate);
 }
 
-module.exports = { listMenu };
+module.exports = { db, listMenu };
+
