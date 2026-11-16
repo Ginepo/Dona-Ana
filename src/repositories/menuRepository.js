@@ -2,7 +2,9 @@
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
 
-const dataDirectory = path.join(__dirname, '../../data');
+const dataDirectory = process.env.DATA_DIR
+  ? path.resolve(process.env.DATA_DIR)
+  : path.join(__dirname, '../../data');
 mkdirSync(dataDirectory, { recursive: true });
 
 const db = new DatabaseSync(path.join(dataDirectory, 'dona-ana.db'));
@@ -66,5 +68,6 @@ function listMenu(pickupDate) {
 }
 
 module.exports = { db, listMenu };
+
 
 
