@@ -44,7 +44,12 @@
       border-radius: .65rem;
       margin-bottom: .75rem;
     }
+    #cart { margin-top: 1.5rem; padding: 1rem; background: white; border-radius: 1rem; }
+    #cart-items { padding-left: 1.25rem; }
+    #cart-items li { margin-bottom: .75rem; }
+    input[type="number"] { width: 5rem; min-height: 44px; font: inherit; margin: .25rem; }
   </style>
+  <script src="/cart.js" defer></script>
   <script src="/menu.js" defer></script>
 </head>
 <body>
@@ -61,8 +66,16 @@
     <div id="filters" role="group" aria-label="Filtrar por categoría"></div>
     <p id="status" role="status">Cargando el menú…</p>
     <section id="menu" aria-label="Platos"></section>
+    <section id="cart" aria-labelledby="cart-heading">
+      <h2 id="cart-heading">Carrito</h2>
+      <ul id="cart-items"></ul>
+      <p id="cart-status" role="status"></p>
+      <p><strong>Total: <span id="cart-total">—</span></strong></p>
+      <button id="accept-prices" type="button" hidden>Aceptar precios actualizados</button>
+    </section>
   </main>
 </body>
 </html>
+
 
 
