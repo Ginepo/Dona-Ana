@@ -43,6 +43,8 @@ function renderMenu(products, category) {
     summary.textContent = 'Ver detalles';
     description.textContent = product.description;
     details.append(summary, description);
+    const actions = document.createElement('div');
+    actions.hidden = product.available_units <= 0;
     if (product.available_units > 0) {
       const label = document.createElement('label');
       const quantity = document.createElement('input');
@@ -56,7 +58,7 @@ function renderMenu(products, category) {
       add.type = 'button';
       add.textContent = 'Agregar al carrito';
       add.addEventListener('click', () => cart.add(product, quantity.valueAsNumber));
-      details.append(label, add);
+      actions.append(label, add);
     }
     const photoUrl = product.has_photo
       ? `/api/dishes/${product.id}/photo`
@@ -76,7 +78,7 @@ function renderMenu(products, category) {
       featured.style.fontWeight = '700';
       card.append(featured);
     }
-    card.append(name, price, availability, details);
+    card.append(name, price, availability, actions, details);
     menu.append(card);
   }
 }
@@ -142,6 +144,7 @@ async function loadMenu(date) {
 
 pickupDate.addEventListener('change', () => loadMenu(pickupDate.value));
 loadMenu();
+
 
 
 

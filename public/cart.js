@@ -3,6 +3,7 @@
   const list = document.querySelector('#cart-items');
   const cartStatus = document.querySelector('#cart-status');
   const total = document.querySelector('#cart-total');
+  const cartShortcut = document.querySelector('#cart-shortcut');
   const acceptPrices = document.querySelector('#accept-prices');
   const dollars = new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' });
 
@@ -111,6 +112,12 @@
     const version = ++requestVersion;
     orderForm.hidden = true;
     const items = [...(currentItems()?.values() ?? [])];
+    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    const shortcutLabel = itemCount === 1
+      ? 'Ver carrito · 1 unidad'
+      : `Ver carrito · ${itemCount} unidades`;
+    cartShortcut.hidden = itemCount === 0;
+    cartShortcut.textContent = shortcutLabel;
     acceptPrices.hidden = true;
     updatedLines = [];
     total.textContent = '—';
@@ -133,6 +140,7 @@
       if (!response.ok) throw new Error(quote.error || 'No se pudo calcular el total.');
 
       total.textContent = dollars.format(quote.totalCents / 100);
+      cartShortcut.textContent = `${shortcutLabel} · ${total.textContent}`;
       cartStatus.textContent = quote.priceChanged
         ? 'Cambió el precio de un plato. Revisa y acepta el total actualizado.'
         : '';
@@ -216,4 +224,5 @@
 
   return { add, setMenu };
 })();
+
 

@@ -1,0 +1,235 @@
+﻿:root {
+  --cream: #faf3e8;
+  --paper: #fffdf8;
+  --ink: #2d201b;
+  --terracotta: #813c2b;
+  --border: #e8d6c6;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+header {
+  background-position: center, 75% 52%;
+  background-size: cover;
+  background-image:
+    linear-gradient(90deg, rgba(52, 24, 16, .96) 8%, rgba(52, 24, 16, .82) 41%, rgba(52, 24, 16, .18) 100%),
+    url('/images/pastelito-pollo.jpg');
+}
+
+header > div {
+  padding-block: clamp(3rem, 8vw, 7rem);
+}
+
+header h1 {
+  font: 700 clamp(3rem, 8vw, 5rem)/1 Georgia, serif;
+  letter-spacing: -.04em;
+}
+
+header p {
+  margin: 1rem 0 1.4rem;
+  font-size: 1.1rem;
+}
+
+.menu-link {
+  display: inline-block;
+  padding: .75rem 1.25rem;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+main h2 {
+  font: 700 2rem/1.15 Georgia, serif;
+}
+
+#pickup-date {
+  max-width: 100%;
+  min-height: 44px;
+  margin: .3rem 0;
+  padding: .4rem .6rem;
+  border: 1px solid var(--border);
+  border-radius: .5rem;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+#menu {
+  gap: 1.25rem;
+}
+
+#menu article {
+  padding: .85rem;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  box-shadow: 0 6px 18px rgba(76, 39, 25, .07);
+}
+
+#menu .dish-photo {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+#menu article h3 {
+  font-size: 1.2rem;
+}
+
+#menu article > div:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+
+#menu article > div > button {
+  background: var(--terracotta);
+  color: white;
+  font-weight: 700;
+}
+
+#cart {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  background: var(--paper);
+}
+
+#cart-shortcut {
+  display: none;
+}
+
+:focus-visible {
+  outline: 3px solid #a85b38;
+  outline-offset: 4px;
+}
+
+@media (max-width: 680px) {
+  header {
+    background-position: center, center;
+    background-image:
+      linear-gradient(90deg, rgba(52, 24, 16, .96), rgba(52, 24, 16, .55)),
+      url('/images/pastelito-pollo.jpg');
+  }
+
+  header > div, main {
+    padding-inline: 1rem;
+  }
+
+  main {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  #cart-shortcut:not([hidden]) {
+    display: block;
+    position: fixed;
+    z-index: 5;
+    right: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: 1rem;
+    padding: .85rem 1rem;
+    border-radius: 999px;
+    background: var(--terracotta);
+    color: white;
+    box-shadow: 0 4px 18px rgba(52, 24, 16, .3);
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+
+#cart h2 {
+  margin-bottom: 1rem;
+}
+
+#cart-heading {
+  scroll-margin-top: 1rem;
+}
+
+#cart-total {
+  color: var(--terracotta);
+  font-size: 1.35rem;
+}
+
+#order-form fieldset {
+  min-inline-size: 0;
+  margin: 1rem 0 0;
+  padding: 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: .85rem;
+  background: var(--cream);
+}
+
+#order-form legend {
+  padding-inline: .4rem;
+  font-weight: 700;
+}
+
+#order-form p {
+  margin-bottom: .85rem;
+}
+
+#order-form label {
+  display: grid;
+  gap: .35rem;
+  font-weight: 600;
+}
+
+#order-form input,
+#order-form select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: .55rem .7rem;
+  border: 1px solid #bca493;
+  border-radius: .55rem;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+#order-form button[type="submit"] {
+  min-height: 46px;
+  padding-inline: 1.25rem;
+  background: var(--terracotta);
+  color: white;
+  font-weight: 700;
+}
+
+#order-form button[type="submit"]:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+#order-status:not(:empty) {
+  margin-top: .85rem;
+  font-weight: 600;
+}
+
+@media (min-width: 681px) {
+  #order-form fieldset {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: .85rem;
+  }
+
+  #order-form button[type="submit"] {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 680px) {
+  #cart {
+    padding: 1rem;
+  }
+
+  #order-form button[type="submit"] {
+    width: 100%;
+  }
+}
