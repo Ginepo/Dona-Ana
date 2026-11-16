@@ -47,8 +47,13 @@ const initializeAvailability = db.prepare(`
   WHERE archived = 0
 `);
 
+const productColumns = db.prepare('PRAGMA table_info(products)').all();
+if (!productColumns.some((column) => column.name === 'photo_jpeg')) {
+  db.exec('ALTER TABLE products ADD COLUMN photo_jpeg BLOB');
+}
+
 const listProducts = db.prepare(`
-  SELECT p.id, p.name, p.category, p.description, p.price_cents, a.available_units
+  SELECT p.id, p.name, p.category, p.description, p.price_cents, a.available_units, p.photo_jpeg IS NOT NULL AS has_photo
   FROM products AS p
   JOIN product_availability AS a ON a.product_id = p.id
   WHERE p.archived = 0 AND a.pickup_date = ?
@@ -61,4 +66,5 @@ function listMenu(pickupDate) {
 }
 
 module.exports = { db, listMenu };
+
 

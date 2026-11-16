@@ -1,0 +1,54 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de Doña Ana</title>
+  <style>
+    body { margin: 0; color: #302119; background: #fff8ef; font: 1rem/1.5 system-ui, sans-serif; }
+    main { max-width: 48rem; margin: auto; padding: 1.25rem; }
+    h1, h2 { color: #713526; }
+    input, button { min-height: 44px; box-sizing: border-box; font: inherit; }
+    input { display: block; width: 100%; max-width: 22rem; padding: .5rem; margin: .25rem 0 .75rem; }
+    button { border: 0; border-radius: .5rem; padding: .5rem 1rem; background: #713526; color: white; cursor: pointer; }
+    article { padding: 1rem; margin: .75rem 0; border-radius: .75rem; background: white; }
+    article h3, article p { margin: 0 0 .5rem; }
+  </style>
+  <script src="/owner-menu.js" defer></script>
+  <script src="/owner.js" defer></script>
+</head>
+<body>
+  <main>
+    <a href="/">Volver al menú</a>
+    <h1>Panel de Doña Ana</h1>
+    <form id="login" hidden>
+      <label for="owner-password">Contraseña</label>
+      <input id="owner-password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit">Iniciar sesión</button>
+    </form>
+    <p id="owner-status" role="status">Comprobando la sesión…</p>
+    <section id="dashboard" hidden>
+      <button type="button" id="logout">Cerrar sesión</button>
+      <h2>Editar menú</h2>
+      <form id="dish-form">
+        <fieldset>
+          <legend id="dish-action">Nuevo plato</legend>
+          <label>Nombre <input name="dishName" required maxlength="80"></label>
+          <label>Categoría <input name="category" required maxlength="40"></label>
+          <label>Descripción <input name="description" required maxlength="400"></label>
+          <label>Precio en dólares <input name="price" type="number" min="0.01" max="1000" step="0.01" required></label>
+          <label>Unidades por defecto para fechas nuevas <input name="units" type="number" min="0" max="999" step="1" required></label>
+          <label>Foto opcional <input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+          <button type="submit">Guardar plato</button>
+          <button type="button" id="cancel-dish-edit" hidden>Cancelar edición</button>
+        </fieldset>
+      </form>
+      <p id="dish-status" role="status"></p>
+      <div id="dish-list"></div>
+      <h2>Pedidos pendientes</h2>
+      <div id="pending-orders"></div>
+    </section>
+  </main>
+</body>
+</html>
+
