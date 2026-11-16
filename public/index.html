@@ -72,10 +72,21 @@
       <p id="cart-status" role="status"></p>
       <p><strong>Total: <span id="cart-total">—</span></strong></p>
       <button id="accept-prices" type="button" hidden>Aceptar precios actualizados</button>
+      <form id="order-form" hidden>
+        <fieldset>
+          <legend>Datos de recogida</legend>
+          <p><label>Nombre <input name="customerName" autocomplete="name" required minlength="2" maxlength="80"></label></p>
+          <p><label>Teléfono <input name="phone" type="tel" autocomplete="tel" required></label></p>
+          <p><label>Hora de recogida <select name="pickupTime" required></select></label></p>
+          <button type="submit" disabled>Enviar pedido</button>
+        </fieldset>
+      </form>
+      <p id="order-status" role="status"></p>
     </section>
   </main>
 </body>
 </html>
+
 
 
 
