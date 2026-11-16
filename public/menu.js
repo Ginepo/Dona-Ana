@@ -41,13 +41,39 @@ function renderMenu(products, category) {
   }
 }
 
-async function loadMenu() {
-  try {
-    const response = await fetch('/api/menu');
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+const pickupDate = document.querySelector('#pickup-date');
+const dateLabel = new Intl.DateTimeFormat('es-US', {
+  weekday: 'long',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC'
+});
 
-    const products = await response.json();
-    const categories = [...new Set(products.map((product) => product.category))];
+async function loadMenu(date) {
+  pickupDate.disabled = true;
+  filters.replaceChildren();
+  menu.replaceChildren();
+  status.textContent = 'Cargando el menú…';
+
+  try {
+    const url = date ? `/api/menu?date=${encodeURIComponent(date)}` : '/api/menu';
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'No se pudo cargar el menú.');
+
+    pickupDate.replaceChildren();
+    for (const day of data.pickupDates) {
+      const label = dateLabel.format(new Date(`${day.date}T00:00:00Z`));
+      pickupDate.add(new Option(day.open ? label : `${label} (cerrado)`, day.date));
+    }
+    pickupDate.value = data.pickupDate;
+
+    if (data.closed) {
+      status.textContent = 'Ese día estamos cerrados. Elige otra fecha de recogida.';
+      return;
+    }
+
+    const categories = [...new Set(data.products.map((product) => product.category))];
 
     for (const category of [null, ...categories]) {
       const button = document.createElement('button');
@@ -58,16 +84,19 @@ async function loadMenu() {
         for (const filter of filters.children) {
           filter.setAttribute('aria-pressed', String(filter === button));
         }
-        renderMenu(products, category);
+        renderMenu(data.products, category);
       });
       filters.append(button);
     }
 
-    renderMenu(products, null);
+    renderMenu(data.products, null);
   } catch (error) {
     console.error(error);
-    status.textContent = 'No se pudo cargar el menú. Recarga la página para intentarlo de nuevo.';
+    status.textContent = 'No se pudo cargar el menú. Recarga la página e inténtalo de nuevo.';
+  } finally {
+    pickupDate.disabled = pickupDate.options.length === 0;
   }
 }
 
+pickupDate.addEventListener('change', () => loadMenu(pickupDate.value));
 loadMenu();
