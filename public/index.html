@@ -51,16 +51,18 @@
   </style>
   <script src="/cart.js" defer></script>
   <script src="/menu.js" defer></script>
+  <link rel="stylesheet" href="/storefront.css">
 </head>
 <body>
   <header>
     <div>
       <h1>Doña Ana</h1>
       <p>Comida casera para recoger</p>
+      <a class="menu-link" href="#menu-heading">Ver menú</a>
     </div>
   </header>
   <main>
-    <h2>Menú</h2>
+    <h2 id="menu-heading">Menú</h2>
     <label for="pickup-date">Fecha de recogida</label>
     <select id="pickup-date" disabled></select>
     <div id="filters" role="group" aria-label="Filtrar por categoría"></div>
@@ -84,8 +86,10 @@
       <p id="order-status" role="status"></p>
     </section>
   </main>
+  <a id="cart-shortcut" href="#cart-heading" hidden>Ver carrito</a>
 </body>
 </html>
+
 
 
 
